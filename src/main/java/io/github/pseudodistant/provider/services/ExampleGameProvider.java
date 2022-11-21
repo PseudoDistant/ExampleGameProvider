@@ -14,6 +14,7 @@ import net.fabricmc.loader.impl.util.version.StringVersion;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -148,15 +149,13 @@ public class ExampleGameProvider implements GameProvider {
 			if(gameJarProperty == null) {
 				gameJarProperty = "./game.jar";
 			}
-			if(gameJarProperty != null) {
-				Path path = Paths.get(gameJarProperty);
-				if (!Files.exists(path)) {
-					throw new RuntimeException("Game jar configured through " + SystemProperties.GAME_JAR_PATH + " system property doesn't exist");
-				}
-
-				result = GameProviderHelper.findFirst(Collections.singletonList(path), zipFiles, true, ENTRYPOINTS);
+			Path path = Paths.get(gameJarProperty);
+			if (!Files.exists(path)) {
+				throw new RuntimeException("Game jar configured through " + SystemProperties.GAME_JAR_PATH + " system property doesn't exist");
 			}
-			
+
+			result = GameProviderHelper.findFirst(Collections.singletonList(path), zipFiles, true, ENTRYPOINTS);
+
 			if(result == null) {
 				return false;
 			}
@@ -176,7 +175,12 @@ public class ExampleGameProvider implements GameProvider {
 
 	@Override
 	public void initialize(FabricLauncher launcher) {
-		TRANSFORMER.locateEntrypoints(launcher, gameJar);
+		try {
+			launcher.setValidParentClassPath(Collections.singletonList(Path.of(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI())));
+		} catch (URISyntaxException e) {
+			throw new RuntimeException(e);
+		}
+		TRANSFORMER.locateEntrypoints(launcher, Collections.singletonList(gameJar));
 	}
 
 	@Override

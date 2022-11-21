@@ -4,7 +4,7 @@ A template that people can use for their own GameProviders, or mod Infinite Tux 
 
 If you desperately want to use it for Infinite Tux, get the jar here:
 https://github.com/qbancoffee/infinite-tux/releases/tag/1.1sfx
-Then rename it to 'game.jar', and launch Knot from the same directory that 'game.jar' is in, with the provider and Fabric's dependencies in the classpath.
+Then rename it to 'game.jar', put it in the 'test' directory and run the gradle task 'run'
 
 ## License
 
