@@ -26,7 +26,9 @@ public class ExampleGameProvider implements GameProvider {
 	 * (At least one of these should have the main method, so that the game can start.)
 	 */
 	private static final String[] ENTRYPOINTS = new String[]{"com.mojang.mario.FullScreenFrameLauncher"};
-	// Set our game's arguments (This variable isn't necessary, but makes the process a lot easier).
+	/**
+	 *  Get the command line arguments for the game. See: {@link net.fabricmc.loader.api.FabricLoader#getLaunchArguments(boolean) getLaunchArguments}
+	 */
 	private static final Set<String> SENSITIVE_ARGS = new HashSet<>(Arrays.asList(
 			// List of all of our arguments, all lowercase, and without --
 			"list",
@@ -60,20 +62,31 @@ public class ExampleGameProvider implements GameProvider {
 	}
 
 	@Override
-	// Set the version string of the game, simple as that.
+	/**
+	 * Set the version string of the game, simple as that.
+	 * It should be noted that it's not possible to detail exactly how to get the version of the game,
+	 * as the process is different for each game.
+	 * Usually, you can use ASM to grab the version string, as done for MinecraftGameProvider, or projects like MiniFabric.
+	 * But this won't always be the case, be warned.
+	 */
 	public String getRawGameVersion() {
 		return gameVersion.getFriendlyString();
 	}
 
 	@Override
-	// Set a SemVer-compliant string so that mods can see if they're compatible with the version being loaded.
+	/**
+	 * Set a SemVer-compliant string so that mods can see if they're compatible with the version being loaded.
+	 * Won't be necessary 100% of the time, but will be useful if the game you're modding happens to have an inconsistent version scheme.
+	 * Example: Minecraft 1.8.3, Minecraft 15w14a
+ 	 */
 	public String getNormalizedGameVersion() {
 		return getRawGameVersion();
 	}
 
 	@Override
-	/* This is where we actually set the game's metadata, including the modid, the version, the author, and any
-	 * other relevant metadata to the game.
+	/**
+	 *  This is where we actually set the game's metadata, including the modid, the version, the author, and any other relevant metadata to the game.
+	 *  It can also be used for setting metadata for other libraries included in the game that you might want to describe as mods for a variety of reasons.
 	 */
 	public Collection<BuiltinMod> getBuiltinMods() {
 		HashMap<String, String> exampleContactInformation = new HashMap<>();
@@ -99,7 +112,8 @@ public class ExampleGameProvider implements GameProvider {
 	}
 
 	@Override
-	/* Get the game's launch directory. This is especially useful if the game has a launcher that
+	/**
+	 *  Get the game's launch directory. This is especially useful if the game has a launcher that
 	 * launches it from a specific directory, like Minecraft.
 	 * For any game that's run with a `java -jar` command, we can usually just set it to the current working
 	 * directory, which can be called with "." or just a filename like "game.jar"
@@ -113,16 +127,19 @@ public class ExampleGameProvider implements GameProvider {
 
 	@Override
 	// Is the game obfuscated, as in does it need an intermediary?
+	// Important note: Any AccessWideners used on an unobfuscated game still have to use the "intermediary" namespace, they will not work otherwise.
 	public boolean isObfuscated() {
 		return false;
 	}
 
 	@Override
+	// TODO
 	public boolean requiresUrlClassLoader() {
 		return false;
 	}
 
 	@Override
+	// TODO
 	public boolean isEnabled() {
 		return true;
 	}
@@ -148,15 +165,13 @@ public class ExampleGameProvider implements GameProvider {
 			if(gameJarProperty == null) {
 				gameJarProperty = "./game.jar";
 			}
-			if(gameJarProperty != null) {
-				Path path = Paths.get(gameJarProperty);
-				if (!Files.exists(path)) {
-					throw new RuntimeException("Game jar configured through " + SystemProperties.GAME_JAR_PATH + " system property doesn't exist");
-				}
-
-				result = GameProviderHelper.findFirst(Collections.singletonList(path), zipFiles, true, ENTRYPOINTS);
+			Path path = Paths.get(gameJarProperty);
+			if (!Files.exists(path)) {
+				throw new RuntimeException("Game jar configured through " + SystemProperties.GAME_JAR_PATH + " system property doesn't exist");
 			}
-			
+
+			result = GameProviderHelper.findFirst(Collections.singletonList(path), zipFiles, true, ENTRYPOINTS);
+
 			if(result == null) {
 				return false;
 			}
@@ -175,11 +190,13 @@ public class ExampleGameProvider implements GameProvider {
 	}
 
 	@Override
+	// TODO
 	public void initialize(FabricLauncher launcher) {
 		TRANSFORMER.locateEntrypoints(launcher, Collections.singletonList(gameJar));
 	}
 
 	@Override
+	// TODO
 	public GameTransformer getEntrypointTransformer() {
 		return TRANSFORMER;
 	}

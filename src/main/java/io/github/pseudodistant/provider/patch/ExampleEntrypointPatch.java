@@ -19,10 +19,7 @@ public class ExampleEntrypointPatch extends GamePatch {
         // Get the game's entrypoint (set in the GameProvider) from FabricLauncher
         String entrypoint = launcher.getEntrypoint();
 
-        /* Check to see if we got only the entrypoint we want, as you can have multiple entrypoints set.
-         * (Usually for client/server differences and the like, but I like to see this as being abusable
-         * and allowing one provider to load multiple games.)
-         */
+        /* Check to see if we got only the entrypoint we want, as you can have multiple entrypoints set.*/
         if (!entrypoint.startsWith("com.mojang.")) {
             return;
         }
@@ -45,7 +42,9 @@ public class ExampleEntrypointPatch extends GamePatch {
 
         // Assign the variable `it` to the list of instructions for our initializer method.
         ListIterator<AbstractInsnNode> it = initMethod.instructions.iterator();
-        // Add our hooks to the initializer method.
+        /*
+          Add our hooks from ExampleHooks.init() to the initializer method.
+         */
         it.add(new MethodInsnNode(Opcodes.INVOKESTATIC, ExampleHooks.INTERNAL_NAME, "init", "()V", false));
         // And finally, apply our changes to the class.
         classEmitter.accept(mainClass);

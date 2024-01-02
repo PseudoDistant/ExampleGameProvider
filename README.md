@@ -13,3 +13,13 @@ This template is available under the CC0 license. Feel free to learn from it and
 Example Game is Infinite Tux, which is licensed under several different licenses, which can be read here:
 https://github.com/qbancoffee/infinite-tux/blob/master/copyright
 I do not own Infinite Tux, nor do I actively work on it.
+
+# How it works
+https://github.com/PseudoDistant/ExampleGameProvider/blob/master/src/main/resources/META-INF/services/net.fabricmc.loader.impl.game.GameProvider \
+This file is used by Fabric Loader to determine where your GameProvider class actually is. It's important that the file is in META-INF/services, 
+and is named `net.fabricmc.loader.impl.game.GameProvider` exactly.\
+The contents of the file should be the full classname of your GameProvider class.
+
+
+
+
