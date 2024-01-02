@@ -5,7 +5,6 @@ import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.impl.FabricLoaderImpl;
-import net.fabricmc.loader.impl.entrypoint.EntrypointUtils;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
