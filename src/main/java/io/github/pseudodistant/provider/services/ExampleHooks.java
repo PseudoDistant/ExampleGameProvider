@@ -18,13 +18,14 @@ public final class ExampleHooks {
      */
     public static void init() {
         Path runDir = Paths.get(".");
+        FabricLoaderImpl floader = FabricLoaderImpl.INSTANCE;
 
-        FabricLoaderImpl.INSTANCE.prepareModInit(runDir, FabricLoaderImpl.INSTANCE.getGameInstance());
-        EntrypointUtils.invoke("main", ModInitializer.class, ModInitializer::onInitialize);
+        floader.prepareModInit(runDir, floader.getGameInstance());
+        floader.invokeEntrypoints("main", ModInitializer.class, ModInitializer::onInitialize);
         if (FabricLoaderImpl.INSTANCE.getEnvironmentType() == EnvType.CLIENT) {
-            EntrypointUtils.invoke("client", ClientModInitializer.class, ClientModInitializer::onInitializeClient);
+            floader.invokeEntrypoints("client", ClientModInitializer.class, ClientModInitializer::onInitializeClient);
         } else {
-            EntrypointUtils.invoke("server", DedicatedServerModInitializer.class, DedicatedServerModInitializer::onInitializeServer);
+            floader.invokeEntrypoints("server", DedicatedServerModInitializer.class, DedicatedServerModInitializer::onInitializeServer);
         }
     }
 }

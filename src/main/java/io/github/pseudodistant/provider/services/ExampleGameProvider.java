@@ -176,7 +176,7 @@ public class ExampleGameProvider implements GameProvider {
 
 	@Override
 	public void initialize(FabricLauncher launcher) {
-		TRANSFORMER.locateEntrypoints(launcher, gameJar);
+		TRANSFORMER.locateEntrypoints(launcher, Collections.singletonList(gameJar));
 	}
 
 	@Override
